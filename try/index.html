@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <style>
+       *{
+         box-sizing : border-box;
+         padding : 0;
+         margin : 0 ;
+       }
+       #canvas {
+         background : gray;
+         position : relative;
+         left : 30px;
+         top : 30px;
+       }
+       .radios{
+         margin: 50px;
+       }
+    </style>
+  </head>
+  <body>
+     <canvas id='canvas' width='500' height ='500'></canvas>
+     <div class='radios'>
+           <input id='node' type='radio' name='radio' value='node' checked>node
+           <input id='edge' type='radio' name='radio' value='edge'>edge
+     </div>
+     <script src='createNode.js'></script>
+  </body>
+</html>

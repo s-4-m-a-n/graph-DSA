@@ -1,0 +1,7 @@
+Requirements :
+
+1. create new node 
+2. create new edge 
+3. setting :  change node color , change label style ,searching animation speed 
+4. change mode : graph mode / grid mode 
+5. enable / disable  weighted graph 
