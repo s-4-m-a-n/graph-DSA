@@ -12,10 +12,14 @@ const nodeLabelColor = 'red';
 const nodeRadius = gridWidth/2;
 
 //for edge
+const edgeColor = 'black';
+const arrowheadColor = 'black';
 var to;
 var from;
 var edgeFlag = false;  // true indicates that edge is ready to create
 
+//for weight
+const weightColor = 'rgb(62, 4, 6)';
 
 
 function displayGrid(){
@@ -108,10 +112,16 @@ to = {
 
   drawEdge(to,from);
   drawArrowhead(to,from,angle,nodeRadius/2);
-  console.log(start.x);
+  addWeight(to,from,angle,'5');
+
+
 
 }
+
+
+
 function drawEdge(to,from){
+  ctx.strokeStyle = edgeColor;
   ctx.beginPath();
   ctx.moveTo(from.x,from.y);
   ctx.lineTo(to.x,to.y);
@@ -124,6 +134,7 @@ function drawArrowhead( from, to,angle, radius) {
 	var x;
 	var y;
 
+  ctx.fillStyle = arrowheadColor;
 	ctx.beginPath();
 
 	angle = Math.atan2(to.y - from.y, to.x - from.x)
@@ -150,6 +161,15 @@ function drawArrowhead( from, to,angle, radius) {
 }
 
 
+function addWeight(to,from,angle,weight){
+  var midPoint = { x : from.x + Math.round((to.x - from.x)/2) ,y : from.y + Math.round((to.y - from.y)/2) };
+  ctx.font = "10px Comic Sans MS";
+  ctx.fillStyle = weightColor;
+  ctx.textAlign = "center";
+
+  ctx.fillText(weight, midPoint.x-10, midPoint.y-10);  // -10 prohibit overlaping of weight to the edge
+}
+
 
 
 
@@ -157,7 +177,7 @@ function drawArrowhead( from, to,angle, radius) {
 
 //add event listenter for creating nodes
 cvs.addEventListener('mousedown',createEdge);
-cvs.addEventListener('mousedown',createNode);
+//cvs.addEventListener('mousedown',createNode);
 
 
 
