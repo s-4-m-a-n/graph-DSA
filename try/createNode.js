@@ -9,6 +9,7 @@ const gridColor  = 'black';
 const nodeFillColor = 'green';
 const nodeStrokeColor = 'black';
 const nodeLabelColor = 'red';
+const nodeRadius = gridWidth/2;
 
 //for edge
 var to;
@@ -41,11 +42,11 @@ function createNode(evt){
   ctx.fillStyle = nodeFillColor;
   ctx.strokeStyle = nodeStrokeColor;
   ctx.beginPath();
-  ctx.arc(node.centerX,node.centerY,gridWidth/2,0,2*Math.PI);  //arc (centerX,cetnterY,radius,initialAngle,finalAngle); //2 * PI = 360deg
+  ctx.arc(node.centerX,node.centerY,nodeRadius,0,2*Math.PI);  //arc (centerX,cetnterY,radius,initialAngle,finalAngle); //2 * PI = 360deg
   ctx.fill();
   ctx.stroke();
   //display label
-  var fontSize = (gridWidth/2)*1/1.8 ;  // radius / 1.8;
+  var fontSize = (nodeRadius)*1/1.8 ;  // radius / 1.8;
   ctx.font = fontSize+"px Comic Sans MS";
   ctx.fillStyle = nodeLabelColor;
   ctx.textAlign = "center";
@@ -92,17 +93,71 @@ function createEdge(event){
 }
 
 function displayEdge(to,from){
-  ctx.beginPath();
-  ctx.moveTo(from.centerX,from.centerY);
-  ctx.lineTo(to.centerX,to.centerY);
-  ctx.stroke();
-  console.log(from.centerX);
+//clipping edge
+  var angle = Math.atan2(to.centerY-from.centerY , to.centerX - from.centerX);
+
+from = {
+        x: from.centerX + Math.cos(angle) * nodeRadius, // B = cos(theta) * H
+        y: from.centerY + Math.sin(angle) * nodeRadius
+      };
+to = {
+        x: to.centerX - Math.cos(angle) * nodeRadius, // B = cos(theta) * H
+        y: to.centerY - Math.sin(angle) * nodeRadius
+     };
+//----------------------------------------------
+
+  drawEdge(to,from);
+  drawArrowhead(to,from,angle,nodeRadius/2);
+  console.log(start.x);
+
 }
+function drawEdge(to,from){
+  ctx.beginPath();
+  ctx.moveTo(from.x,from.y);
+  ctx.lineTo(to.x,to.y);
+  ctx.stroke();
+}
+
+function drawArrowhead( from, to,angle, radius) {
+	var x_center = to.x;
+	var y_center = to.y;
+	var x;
+	var y;
+
+	ctx.beginPath();
+
+	angle = Math.atan2(to.y - from.y, to.x - from.x)
+	x =  x_center;
+	y =  y_center;
+
+	ctx.moveTo(x, y);
+
+	angle += (1.0/3.0) * (2 * Math.PI)
+	x = radius * Math.cos(angle) + x_center;
+	y = radius * Math.sin(angle) + y_center;
+
+	ctx.lineTo(x, y);
+
+	angle += (1.0/3.0) * (2 * Math.PI)
+	x = radius *Math.cos(angle) + x_center;
+	y = radius *Math.sin(angle) + y_center;
+
+	ctx.lineTo(x, y);
+
+	ctx.closePath();
+	ctx.fill();
+
+}
+
+
+
+
+
 
 
 //add event listenter for creating nodes
 cvs.addEventListener('mousedown',createEdge);
-
+cvs.addEventListener('mousedown',createNode);
 
 
 
