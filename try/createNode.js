@@ -1,5 +1,5 @@
-var cvs  = document.getElementById('canvas');
-var ctx  = cvs.getContext("2d");
+const cvs  = document.getElementById('canvas');
+const ctx  = cvs.getContext("2d");
 
 const gridWidth  = 50;
 const gridHeight  = 50;
@@ -29,13 +29,9 @@ function displayGrid(){
   }
 }
 
-
-
-displayGrid();
-
-
-function createNode(x,y,label='node'){
-  var node = newNode(x,y); //return the center of the grid for corresponding x,y
+function createNode(evt){
+  var pos = getMousePos(cvs,evt);
+  var node = newNode(pos.x,pos.y); //return the center of the grid for corresponding x,y
   ctx.fillStyle = nodeFillColor;
   ctx.strokeStyle = nodeStrokeColor;
   ctx.beginPath();
@@ -47,7 +43,7 @@ function createNode(x,y,label='node'){
   ctx.font = fontSize+"px Comic Sans MS";
   ctx.fillStyle = nodeLabelColor;
   ctx.textAlign = "center";
-  ctx.fillText(label, node.centerX, node.centerY);
+  ctx.fillText(prompt('name of the node','node'), node.centerX, node.centerY);
 
 }
 
@@ -55,7 +51,6 @@ function createNode(x,y,label='node'){
 function newNode(x,y){
   var centerX = Math.floor(x/gridWidth)*gridWidth+(gridWidth/2);  // N*gridwidth + gridWidth/2;
   var centerY = Math.floor(y/gridHeight)*gridHeight+(gridHeight/2);
-
  return {
     centerX: centerX,
     centerY:centerY
@@ -63,5 +58,26 @@ function newNode(x,y){
 }
 
 
-createNode(100,100);
-createNode(200,200);
+function getMousePos(canvas,evt){
+  var rect = canvas.getBoundingClientRect();
+  var x = evt.clientX - rect.left;
+  var y = evt.clientY - rect.top;
+  return {
+            x:x,
+            y:y,
+            z:rect.left
+         }
+}
+
+
+//add event listenter for creating nodes
+cvs.addEventListener('mousedown',createNode);
+
+
+
+
+
+
+displayGrid();
+createNode();
+//createNode();
