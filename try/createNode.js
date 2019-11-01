@@ -10,7 +10,7 @@ const nodeFillColor = 'green';
 const nodeStrokeColor = 'black';
 const nodeLabelColor = 'red';
 const nodeRadius = gridWidth/2;
-
+var radius = 0;  //for animation
 //for edge
 const edgeColor = 'black';
 const arrowheadColor = 'black';
@@ -21,6 +21,8 @@ var edgeFlag = false;  // true indicates that edge is ready to create
 //for weight
 const weightColor = 'rgb(62, 4, 6)';
 
+//for animation
+ var x ,y;
 
 function displayGrid(){
   //creating verticle grid lines
@@ -43,20 +45,47 @@ function displayGrid(){
 function createNode(evt){
   var pos = getMousePos(cvs,evt);
   var node = getCenterPos(pos.x,pos.y); //return the center of the grid for corresponding x,y
+
   ctx.fillStyle = nodeFillColor;
   ctx.strokeStyle = nodeStrokeColor;
+  radius = 0;
+/*
   ctx.beginPath();
-  ctx.arc(node.centerX,node.centerY,nodeRadius,0,2*Math.PI);  //arc (centerX,cetnterY,radius,initialAngle,finalAngle); //2 * PI = 360deg
+  ctx.arc(node.centerX,node.centerY,radius,0,2*Math.PI);  //arc (centerX,cetnterY,radius,initialAngle,finalAngle); //2 * PI = 360deg
   ctx.fill();
   ctx.stroke();
+*/
+  x = node.centerX;
+  y = node.centerY;
+  drawNode();
+
   //display label
+/*
   var fontSize = (nodeRadius)*1/1.8 ;  // radius / 1.8;
   ctx.font = fontSize+"px Comic Sans MS";
   ctx.fillStyle = nodeLabelColor;
   ctx.textAlign = "center";
   ctx.fillText(prompt('name of the node','node'), node.centerX, node.centerY);
+*/
+}
+
+
+function drawNode(){
+  radius += 1;
+
+  ctx.beginPath();
+  ctx.arc(x,y,radius,0,2*Math.PI);  //arc (centerX,cetnterY,radius,initialAngle,finalAngle); //2 * PI = 360deg
+  ctx.fill();
+  ctx.stroke();
+console.log(x +" "+y+" "+radius);
+if (radius < nodeRadius){
+  window.requestAnimationFrame(drawNode);
+}
 
 }
+
+
+
 
 
 function getCenterPos(x,y){  //return the center position of the corresponding grid
@@ -177,10 +206,10 @@ function addWeight(to,from,angle,weight){
 
 //add event listenter for creating nodes
 cvs.addEventListener('mousedown',createEdge);
-//cvs.addEventListener('mousedown',createNode);
+cvs.addEventListener('mousedown',createNode);
 
 
 
 
 
-displayGrid();
+//displayGrid();
