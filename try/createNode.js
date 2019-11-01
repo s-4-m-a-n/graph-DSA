@@ -10,6 +10,12 @@ const nodeFillColor = 'green';
 const nodeStrokeColor = 'black';
 const nodeLabelColor = 'red';
 
+//for edge
+var to;
+var from;
+var edgeFlag = false;  // true indicates that edge is ready to create
+
+
 
 function displayGrid(){
   //creating verticle grid lines
@@ -31,7 +37,7 @@ function displayGrid(){
 
 function createNode(evt){
   var pos = getMousePos(cvs,evt);
-  var node = newNode(pos.x,pos.y); //return the center of the grid for corresponding x,y
+  var node = getCenterPos(pos.x,pos.y); //return the center of the grid for corresponding x,y
   ctx.fillStyle = nodeFillColor;
   ctx.strokeStyle = nodeStrokeColor;
   ctx.beginPath();
@@ -48,7 +54,7 @@ function createNode(evt){
 }
 
 
-function newNode(x,y){
+function getCenterPos(x,y){  //return the center position of the corresponding grid
   var centerX = Math.floor(x/gridWidth)*gridWidth+(gridWidth/2);  // N*gridwidth + gridWidth/2;
   var centerY = Math.floor(y/gridHeight)*gridHeight+(gridHeight/2);
  return {
@@ -65,13 +71,37 @@ function getMousePos(canvas,evt){
   return {
             x:x,
             y:y,
-            z:rect.left
          }
 }
 
 
+function createEdge(event){
+    if (edgeFlag == false){
+          var pos = getMousePos(cvs,event);
+          to = getCenterPos(pos.x,pos.y);
+          edgeFlag = true;
+    }
+    else{
+      var pos = getMousePos(cvs,event);
+      from = getCenterPos(pos.x,pos.y);
+      edgeFlag = false;
+
+      displayEdge(to,from);
+
+    }
+}
+
+function displayEdge(to,from){
+  ctx.beginPath();
+  ctx.moveTo(from.centerX,from.centerY);
+  ctx.lineTo(to.centerX,to.centerY);
+  ctx.stroke();
+  console.log(from.centerX);
+}
+
+
 //add event listenter for creating nodes
-cvs.addEventListener('mousedown',createNode);
+cvs.addEventListener('mousedown',createEdge);
 
 
 
@@ -79,5 +109,3 @@ cvs.addEventListener('mousedown',createNode);
 
 
 displayGrid();
-createNode();
-//createNode();
