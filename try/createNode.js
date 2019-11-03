@@ -139,17 +139,15 @@ function getMousePos(canvas,evt){
 }
 
 
-function createEdge(event){
+function createEdge(event,edgeFlag){
     if (edgeFlag == false){
           var pos = getMousePos(cvs,event);
           to = getCenterPos(pos.x,pos.y);
-          edgeFlag = true;
+
     }
     else{
       var pos = getMousePos(cvs,event);
       from = getCenterPos(pos.x,pos.y);
-      edgeFlag = false;
-
       displayEdge(to,from);
     }
 

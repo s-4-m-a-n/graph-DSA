@@ -1,3 +1,12 @@
+// centerX  stores pixel value
+// nodeList stores grid value
+//selectedNode stores grid value
+//nodePosition stores pixel value
+
+const selectedNodeFillColor = 'rgb(7, 89, 20)';
+const selectedNodeStrokeColor = 'rgb(232, 5, 20)';
+const selectedNodeLabelColor = 'rgba(245, 168, 170, 0.98)';
+
 var nodeList = new Array();   // arrey of object to store the information of each and every created node
 var temp;
 var count = 0;
@@ -59,18 +68,9 @@ function displaySelectedNode(event,nodePosition,style,animation){
   if (Object.keys(selectedNode[0]).length == 0 ){ // if node isnot selected yet
     //console.log('new');
 
+         createEdge(event,false);
 //getting previous label value
-         for (var i = 0 ; i < nodeList.length ; i++){
-            //   console.log(nodeList[i].x + ', ' +nodeList[i].y);
-          //     console.log(Math.floor(nodePosition.centerX/gridWidth) == nodeList[i].x);
-          //     console.log(Math.floor(nodePosition.centerY/gridHeight));
-          if((nodeList[i].x == Math.floor(nodePosition.centerX/gridWidth)) && (nodeList.y == Math.floor(nodePosition.centerY/gridHeight)) )
-              {
-                console.log('dsasadasadsa');
-                 name = nodeList[i].label;
-                 console.log('0'+name);
-              }
-            }
+         name = getLabelOfSelectedNode(nodeList,nodePosition);
    //console.log('1'+name);
 
     setSelectStyle(style);
@@ -81,11 +81,18 @@ function displaySelectedNode(event,nodePosition,style,animation){
      }
  else if ((Math.floor(nodePosition.centerX/gridWidth) == selectedNode[0]["x"]) && (Math.floor(nodePosition.centerY/gridHeight) == selectedNode[0]["y"])){ //toggle if already selected node is selected
    //console.log(selectedNode[0]);
+
        setDefaultStyle(style);
        createNode(event,nodePosition,selectedNode[0].label,style,animation);
        selectedNode[0] = {};
  }
  else{
+   setDefaultStyle(style);
+   createNode(event,{centerX:(selectedNode[0].x*gridWidth)+Math.floor(gridWidth/2), centerY :(selectedNode[0].y*gridHeight)+Math.floor(gridHeight/2)},selectedNode[0].label,style,animation);
+   selectedNode[0] = {};
+   createEdge(event,true);
+   
+
 
  }
 }
@@ -96,8 +103,22 @@ function setDefaultStyle(style){
   style.labelColor=nodeLabelColor ;
 }
 function setSelectStyle(style){
-  style.fillColor = 'black' ;
-  style.strokeColor ='red' ;
-  style.labelColor='white' ;
+  style.fillColor = selectedNodeFillColor ;
+  style.strokeColor =selectedNodeStrokeColor ;
+  style.labelColor= selectedNodeLabelColor;
 
+}
+
+function getLabelOfSelectedNode(nodeList,nodePosition){
+  for (var i = 0 ; i < nodeList.length ; i++){
+     //   console.log(nodeList[i].x + ', ' +nodeList[i].y);
+   //     console.log(Math.floor(nodePosition.centerX/gridWidth) == nodeList[i].x);
+   //     console.log(Math.floor(nodePosition.centerY/gridHeight));
+   console.log((nodeList[i].x == Math.floor(nodePosition.centerX/gridWidth)) && (nodeList[i].y == Math.floor(nodePosition.centerY/gridHeight)) );
+   if((nodeList[i].x == Math.floor(nodePosition.centerX/gridWidth)) && (nodeList[i].y == Math.floor(nodePosition.centerY/gridHeight)) )
+       {
+          name = nodeList[i].label;
+        return name;
+       }
+     }
 }
