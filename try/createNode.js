@@ -6,10 +6,10 @@ const gridHeight  = 50;
 const canvasWidth  = cvs.width;
 const canvasHeight  = cvs.height;
 const gridColor  = 'black';
-const nodeFillColor = 'green';
-const nodeStrokeColor = 'black';
+var nodeFillColor = 'green';
+var nodeStrokeColor = 'black';
 const nodeLabelColor = 'red';
-const nodeRadius = gridWidth/2;
+const nodeRadius = gridWidth/4;
 var radius = 0;  //for animation
 //for edge
 const edgeColor = 'black';
@@ -21,8 +21,8 @@ var edgeFlag = false;  // true indicates that edge is ready to create
 //for weight
 const weightColor = 'rgb(62, 4, 6)';
 
-//for animation
- var x ,y;
+//temp
+// var count = 0;
 
 function displayGrid(){
   //creating verticle grid lines
@@ -42,22 +42,28 @@ function displayGrid(){
   }
 }
 
-function createNode(evt){
-  var pos = getMousePos(cvs,evt);
-  var node = getCenterPos(pos.x,pos.y); //return the center of the grid for corresponding x,y
 
-  ctx.fillStyle = nodeFillColor;
-  ctx.strokeStyle = nodeStrokeColor;
+
+function createNode(evt,nodePosition,label,style,animation){ //style = {fillColor : ,strokeColor : ,labelColor:,fontFamily: };
+//  var pos = getMousePos(cvs,evt);
+//  var node = getCenterPos(pos.x,pos.y); //return the center of the grid for corresponding x,y
+  var x = nodePosition.centerX;
+  var y = nodePosition.centerY;
+//  var label = ++count;
+//---var label = prompt('name of the node','node');   //for passing reference
+if(animation == true)
   radius = 0;
+else{
+  radius = nodeRadius;
+}
+
 /*
   ctx.beginPath();
   ctx.arc(node.centerX,node.centerY,radius,0,2*Math.PI);  //arc (centerX,cetnterY,radius,initialAngle,finalAngle); //2 * PI = 360deg
   ctx.fill();
   ctx.stroke();
 */
-  x = node.centerX;
-  y = node.centerY;
-  drawNode();
+  drawNode(x,y,label,style);
 
   //display label
 /*
@@ -67,20 +73,44 @@ function createNode(evt){
   ctx.textAlign = "center";
   ctx.fillText(prompt('name of the node','node'), node.centerX, node.centerY);
 */
+
+return {
+  label :label,
+  x : Math.floor(x/gridWidth),  //grid position
+  y:   Math.floor(y/gridWidth),
+};
 }
 
 
-function drawNode(){
-  radius += 1;
+function drawNode(x,y,label,style){  //for animation
 
+  ctx.fillStyle = style.fillColor;
+  ctx.strokeStyle = style.strokeColor;
   ctx.beginPath();
   ctx.arc(x,y,radius,0,2*Math.PI);  //arc (centerX,cetnterY,radius,initialAngle,finalAngle); //2 * PI = 360deg
   ctx.fill();
   ctx.stroke();
-console.log(x +" "+y+" "+radius);
+  radius++;
+
 if (radius < nodeRadius){
-  window.requestAnimationFrame(drawNode);
+  window.requestAnimationFrame(function(){drawNode(x,y,label,style)});
 }
+else{
+  addLabel(x,y,label,style);
+}
+}
+
+
+
+
+function addLabel(x,y,label,style){
+
+  var fontSize = (nodeRadius)*1/1.8 ;  // radius / 1.8;
+  ctx.font = fontSize+"px Comic Sans MS";
+  ctx.fillStyle = style.labelColor;
+  ctx.textAlign = "center";
+  ctx.fillText(label, x, y);
+
 
 }
 
@@ -121,8 +151,8 @@ function createEdge(event){
       edgeFlag = false;
 
       displayEdge(to,from);
-
     }
+
 }
 
 function displayEdge(to,from){
@@ -203,10 +233,10 @@ function addWeight(to,from,angle,weight){
 
 
 
-
 //add event listenter for creating nodes
-cvs.addEventListener('mousedown',createEdge);
-cvs.addEventListener('mousedown',createNode);
+
+//cvs.addEventListener('mousedown',createEdge);
+//cvs.addEventListener('mousedown',createNode);
 
 
 
